@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0f6b4f">
+<link rel="manifest" href="manifest.webmanifest">
+<title>DOURGA DATA REVOLUTION</title>
+<style>
+:root{--bg:#f4f7f5;--card:#fff;--tx:#14231c;--mut:#5d6d65;--pri:#0f6b4f;--bd:#dfe8e3}
+@media(prefers-color-scheme:dark){:root{--bg:#0e1612;--card:#17231d;--tx:#e8f1ec;--mut:#93a69b;--pri:#2fb98a;--bd:#243329}}
+*{box-sizing:border-box}body{margin:0;font-family:system-ui,sans-serif;background:var(--bg);color:var(--tx);padding-bottom:70px}
+header{background:var(--pri);color:#fff;padding:16px}header h1{margin:0;font-size:18px}header small{opacity:.85}
+main{padding:14px;max-width:560px;margin:auto}.card{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:14px;margin-bottom:12px}
+.big{font-size:32px;font-weight:700;color:var(--pri)}.mut{color:var(--mut);font-size:13px}
+.bar{height:10px;background:var(--bd);border-radius:6px;overflow:hidden;margin:8px 0}.bar i{display:block;height:100%;background:var(--pri)}
+input,button{font:inherit;padding:11px;border-radius:10px;border:1px solid var(--bd);background:var(--card);color:var(--tx);width:100%;margin-top:8px}
+button{background:var(--pri);color:#fff;border:0;font-weight:600}button.sec{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
+nav{position:fixed;bottom:0;left:0;right:0;display:flex;background:var(--card);border-top:1px solid var(--bd)}
+nav button{flex:1;border:0;border-radius:0;margin:0;background:none;color:var(--mut);font-size:12px;padding:12px 4px}nav button.on{color:var(--pri)}
+section{display:none}section.on{display:block}.row{display:flex;justify-content:space-between;margin:6px 0}
+iframe{width:100%;height:55vh;border:1px solid var(--bd);border-radius:10px;margin-top:10px;background:#fff}
+label.t{display:flex;justify-content:space-between;align-items:center;margin:10px 0}label.t input{width:auto;margin:0}
+.plan{border:2px solid var(--bd)}
+</style>
+</head>
+<body>
+<header><h1>DOURGA DATA REVOLUTION</h1><small>Faites durer votre pass Internet</small></header>
+<main>
+
+<section id="s-bord" class="on">
+ <div class="card"><div class="mut">Données économisées (mesurées)</div><div class="big" id="saved">0 Ko</div>
+ <div class="mut" id="pct">Aucune page ouverte pour l’instant.</div></div>
+ <div class="card"><b>Mon pass Internet</b>
+  <input id="passMo" type="number" inputmode="numeric" placeholder="Taille du pass en Mo (ex. 1024)">
+  <input id="usedMo" type="number" inputmode="numeric" placeholder="Déjà consommé en Mo (voir votre opérateur)">
+  <button onclick="savePass()">Enregistrer</button>
+  <div class="bar"><i id="passBar" style="width:0"></i></div><div class="mut" id="passTxt"></div></div>
+ <div class="card mut">⚠️ Cette application mesure uniquement les données passées par son navigateur économique. Elle ne peut pas lire ni réduire la consommation des autres applications depuis le web. La consommation totale se saisit à la main.</div>
+</section>
+
+<section id="s-nav">
+ <div class="card"><b>Navigateur économique</b>
+  <input id="url" type="url" placeholder="https://exemple.com">
+  <label class="t">Sans images<input type="checkbox" id="oImg" checked></label>
+  <label class="t">Sans scripts et pubs<input type="checkbox" id="oJs" checked></label>
+  <button onclick="go()">Ouvrir en mode économique</button>
+  <div class="mut" id="navInfo"></div>
+  <iframe id="view" sandbox="allow-same-origin" title="Page"></iframe></div>
+</section>
+
+<section id="s-eco">
+ <div class="card"><b>Réduire les téléchargements inutiles</b>
+  <p class="mut">Conseils à appliquer sur votre téléphone (Paramètres › Réseau › Économiseur de données).</p>
+  <div class="row"><span>Économiseur de données Android</span><span>✔ à activer</span></div>
+  <div class="row"><span>Lecture auto des vidéos</span><span>✔ à désactiver</span></div>
+  <div class="row"><span>Mises à jour auto des applis</span><span>✔ Wi-Fi seulement</span></div>
+  <div class="row"><span>Données en arrière-plan</span><span>✔ à limiter</span></div></div>
+</section>
+
+<section id="s-stat">
+ <div class="card"><b>Statistiques</b>
+  <div class="row"><span>Pages ouvertes</span><b id="stPages">0</b></div>
+  <div class="row"><span>Taille d’origine</span><b id="stOrig">0 Ko</b></div>
+  <div class="row"><span>Taille livrée</span><b id="stDel">0 Ko</b></div>
+  <div class="row"><span>Économie</span><b id="stSave">0 Ko</b></div>
+  <button class="sec" onclick="resetStats()">Remettre à zéro</button></div>
+</section>
+
+<section id="s-abo">
+ <div class="card plan"><b>Gratuit</b><div class="mut">Navigateur économique, statistiques.</div><div class="mut">Plan actuel</div></div>
+ <div class="card plan"><b>Premium (bientôt)</b><div class="mut">Compression renforcée, sans limite quotidienne. Paiement Mobile Money prévu.</div><button class="sec" disabled>Bientôt disponible</button></div>
+</section>
+</main>
+
+<nav>
+<button class="on" onclick="tab('bord',this)">📊<br>Bord</button>
+<button onclick="tab('nav',this)">🌐<br>Navigateur</button>
+<button onclick="tab('eco',this)">⚙️<br>Réduire</button>
+<button onclick="tab('stat',this)">📈<br>Stats</button>
+<button onclick="tab('abo',this)">⭐<br>Abonnement</button>
+</nav>
+
+<script>
+const PROXY_URL = "https://dourga-data.sowalphaoumar185.workers.dev";
+const Plans = { current: "gratuit", dailyLimitKo: 20480 };
+
+const $ = id => document.getElementById(id);
+const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d } catch { return d } };
+const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} };
+const fmt = o => o >= 1048576 ? (o/1048576).toFixed(1)+" Mo" : Math.round(o/1024)+" Ko";
+
+function tab(n, b){
+  document.querySelectorAll("section").forEach(s => s.classList.remove("on"));
+  $("s-"+n).classList.add("on");
+  document.querySelectorAll("nav button").forEach(x => x.classList.remove("on"));
+  b.classList.add("on");
+}
+function stats(){ return load("stats", {pages:0, orig:0, del:0}); }
+function render(){
+  const s = stats(), sv = Math.max(0, s.orig - s.del);
+  $("saved").textContent = fmt(sv);
+  $("pct").textContent = s.orig ? Math.round(sv/s.orig*100)+" % économisé sur "+s.pages+" page(s)" : "Aucune page ouverte pour l’instant.";
+  $("stPages").textContent = s.pages; $("stOrig").textContent = fmt(s.orig);
+  $("stDel").textContent = fmt(s.del); $("stSave").textContent = fmt(sv);
+  const p = load("pass", {total:0, used:0});
+  if (p.total){ const r = Math.min(100, p.used/p.total*100);
+    $("passBar").style.width = r+"%";
+    $("passTxt").textContent = "Reste : "+Math.max(0,p.total-p.used)+" Mo sur "+p.total+" Mo"; }
+}
+function savePass(){ save("pass", {total:+$("passMo").value||0, used:+$("usedMo").value||0}); render(); }
+function resetStats(){ save("stats", {pages:0, orig:0, del:0}); render(); }
+
+async function go(){
+  let u = $("url").value.trim(); if (!u) return;
+  if (!/^https?:\/\//.test(u)) u = "https://"+u;
+  $("navInfo").textContent = "Chargement…";
+  try {
+    const q = `${PROXY_URL}/?url=${encodeURIComponent(u)}&img=${$("oImg").checked?0:1}&js=${$("oJs").checked?0:1}`;
+    const r = await fetch(q);
+    const html = await r.text();
+    const orig = +r.headers.get("x-original-bytes") || html.length;
+    const del = +r.headers.get("x-delivered-bytes") || html.length;
+    $("view").srcdoc = html;
+    const s = stats(); s.pages++; s.orig += orig; s.del += del; save("stats", s);
+    $("navInfo").textContent = `Original ${fmt(orig)} → livré ${fmt(del)}`;
+    render();
+  } catch(e){ $("navInfo").textContent = "Erreur : proxy non configuré ou page inaccessible."; }
+}
+if ("serviceWorker" in navigator) navigator.serviceWorker.register("sw.js").catch(()=>{});
+render();
+</script>
+</body>
+</html>
