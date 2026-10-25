@@ -81,7 +81,7 @@ label.t{display:flex;justify-content:space-between;align-items:center;margin:10p
 <button onclick="tab('abo',this)">⭐<br>Abonnement</button>
 </nav>
 
-<scri
+<script>
 const PROXY_URL = "https://dourga-proxy.sowalphaoumar185.workers.dev";
 const Plans = { current: "gratuit", dailyLimitKo: 20480 };
 
@@ -90,7 +90,7 @@ const load = (k, d) => { try { return JSON.parse(localStorage.getItem(k)) ?? d }
 const save = (k, v) => { try { localStorage.setItem(k, JSON.stringify(v)) } catch {} };
 const fmt = o => o >= 1048576 ? (o/1048576).toFixed(1)+" Mo" : Math.round(o/1024)+" Ko";
 
-function tab(n, b)
+function tab(n, b){
   document.querySelectorAll("section").forEach(s => s.classList.remove("on"));
   $("s-"+n).classList.add("on");
   document.querySelectorAll("nav button").forEach(x => x.classList.remove("on"));
