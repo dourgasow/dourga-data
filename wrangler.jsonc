@@ -1,6 +1,6 @@
 
 {
-  "name": "dourga-data",
+  "name": "dourga-proxy",
   "main": "Worker.js",
   "compatibility_date": "2026-10-01"
 }
