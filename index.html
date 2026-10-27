@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -22,6 +23,8 @@ section{display:none}section.on{display:block}.row{display:flex;justify-content:
 iframe{width:100%;height:55vh;border:1px solid var(--bd);border-radius:10px;margin-top:10px;background:#fff}
 label.t{display:flex;justify-content:space-between;align-items:center;margin:10px 0}label.t input{width:auto;margin:0}
 .plan{border:2px solid var(--bd)}
+details{border:1px solid var(--bd);border-radius:12px;padding:10px 12px;margin-bottom:8px;background:var(--card)}
+summary{font-weight:700;cursor:pointer}details ol{margin:8px 0 0;padding-left:20px;font-size:14px;line-height:1.5}
 </style>
 </head>
 <body>
@@ -50,12 +53,35 @@ label.t{display:flex;justify-content:space-between;align-items:center;margin:10p
 </section>
 
 <section id="s-eco">
- <div class="card"><b>Réduire les téléchargements inutiles</b>
-  <p class="mut">Conseils à appliquer sur votre téléphone (Paramètres › Réseau › Économiseur de données).</p>
-  <div class="row"><span>Économiseur de données Android</span><span>✔ à activer</span></div>
-  <div class="row"><span>Lecture auto des vidéos</span><span>✔ à désactiver</span></div>
-  <div class="row"><span>Mises à jour auto des applis</span><span>✔ Wi-Fi seulement</span></div>
-  <div class="row"><span>Données en arrière-plan</span><span>✔ à limiter</span></div></div>
+ <div class="card mut">Guide d’économie par application. Les noms des menus peuvent varier un peu selon votre téléphone et la version de l’application. Les vidéos qui se lancent toutes seules sont souvent la plus grosse perte de données.</div>
+ <details open><summary>📱 Android (tout le téléphone)</summary><ol>
+  <li>Paramètres › Réseau et Internet › <b>Économiseur de données</b> : activer.</li>
+  <li>Paramètres › Réseau › Utilisation des données : régler un <b>avertissement</b> avant la fin de votre pass.</li>
+  <li>Paramètres › Applications › (une appli) › Données mobiles : désactiver les <b>données en arrière-plan</b> des applis que vous n’utilisez pas.</li>
+  <li>Play Store › Paramètres › Préférences réseau : mises à jour automatiques en <b>Wi-Fi seulement</b>, lecture auto des vidéos sur <b>Jamais</b>.</li></ol></details>
+ <details><summary>👍 Facebook</summary><ol>
+  <li>Menu › Paramètres et confidentialité › Paramètres › Médias : lecture automatique des vidéos sur <b>Jamais</b>.</li>
+  <li>Activer l’<b>Économiseur de données</b> s’il est proposé.</li>
+  <li>Essayer <b>Facebook Lite</b> si elle est disponible : plus légère.</li>
+  <li>Éviter les vidéos et les Reels sur données mobiles.</li></ol></details>
+ <details><summary>▶️ YouTube</summary><ol>
+  <li>Paramètres › <b>Économiseur de données</b> (ou Qualité vidéo sur réseau mobile) : choisir l’économie de données.</li>
+  <li>Désactiver la <b>lecture automatique</b> de la vidéo suivante.</li>
+  <li>Choisir une qualité basse (144p ou 360p) pour les vidéos qui ne demandent pas d’images nettes.</li>
+  <li>Pour la musique, écouter l’audio plutôt que la vidéo.</li></ol></details>
+ <details><summary>🎵 TikTok</summary><ol>
+  <li>Profil › Menu › Paramètres : activer l’<b>Économiseur de données</b> s’il existe.</li>
+  <li>Limiter le temps de défilement : chaque vidéo qui se charge consomme.</li>
+  <li>Regarder sur <b>Wi-Fi</b> quand c’est possible.</li></ol></details>
+ <details><summary>📷 Instagram</summary><ol>
+  <li>Profil › Menu › Votre application et vos contenus multimédias › Utilisation des données : activer <b>Utiliser moins de données mobiles</b>.</li>
+  <li>Limiter la lecture automatique des vidéos.</li>
+  <li>Éviter les Reels et les Stories vidéo sur données mobiles.</li></ol></details>
+ <details><summary>💬 WhatsApp</summary><ol>
+  <li>Paramètres › Stockage et données › Téléchargement automatique : sur <b>données mobiles</b>, ne rien cocher.</li>
+  <li>Activer <b>Utiliser moins de données pour les appels</b>.</li>
+  <li>Télécharger les vidéos et documents seulement quand vous en avez besoin.</li></ol></details>
+ <div class="card mut">Notre navigateur économique, lui, allège les pages web. Il ne réduit pas la consommation des applications ci-dessus : ce sont leurs réglages qui comptent.</div>
 </section>
 
 <section id="s-stat">
@@ -68,7 +94,7 @@ label.t{display:flex;justify-content:space-between;align-items:center;margin:10p
 </section>
 
 <section id="s-abo">
- <div class="card plan"><b>Gratuit</b><div class="mut">Navigateur économique, statistiques.</div><div class="mut">Plan actuel</div></div>
+ <div class="card plan"><b>Gratuit</b><div class="mut">Navigateur économique, statistiques, guide d’économie.</div><div class="mut">Plan actuel</div></div>
  <div class="card plan"><b>Premium (bientôt)</b><div class="mut">Compression renforcée, sans limite quotidienne. Paiement Mobile Money prévu.</div><button class="sec" disabled>Bientôt disponible</button></div>
 </section>
 </main>
