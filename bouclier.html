@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Bouclier Dourga</title>
+<style>
+body{font-family:sans-serif;margin:0;padding:16px;background:#0b1f2a;color:#fff}
+h1{color:#4ade80;font-size:24px;text-align:center}
+.card{background:#12303f;border-radius:14px;padding:16px;margin-bottom:14px}
+.big{display:block;width:100%;padding:22px;font-size:22px;font-weight:bold;border:0;border-radius:16px;background:#4ade80;color:#0b1f2a}
+.big.off{background:#f87171}
+#status{font-size:18px;text-align:center;margin:0 0 14px}
+button.grey{padding:10px;font-size:15px;border:0;border-radius:10px;background:#335566;color:#fff;width:100%;margin-top:8px}
+input[type=text]{width:100%;box-sizing:border-box;padding:10px;font-size:16px;border-radius:8px;border:0;margin-bottom:10px}
+label{display:flex;align-items:center;gap:10px;padding:10px 4px;border-bottom:1px solid #1d4256}
+pre{background:#0b1f2a;border-radius:8px;padding:10px;font-size:13px;white-space:pre-wrap;word-break:break-word;min-height:40px;color:#a7f3d0}
+summary{font-size:16px;padding:6px 0}
+a{color:#4ade80}
+small{color:#a7c4d1}
+</style>
+</head>
+<body>
+<p><a href="./">← Retour</a></p>
+<h1>🛡️ Protéger mon forfait</h1>
+<div id="msg" class="card" style="display:none"></div>
+<div id="main" style="display:none">
+  <div class="card">
+    <p id="status"></p>
+    <button id="toggle" class="big"></button>
+    <p><small>Quand votre écran est éteint, Facebook, YouTube, TikTok, Instagram et les autres applications gourmandes sont coupées. Elles repartent dès que vous rallumez l'écran. WhatsApp n'est jamais touché.</small></p>
+  </div>
+  <div class="card">
+    <details>
+      <summary>Avancé : couper aussi d'autres applications</summary>
+      <p><small>Les applications cochées sont coupées en permanence tant que la protection est active.</small></p>
+      <input type="text" id="search" placeholder="Chercher une application">
+      <div id="list"></div>
+    </details>
+  </div>
+  <div class="card">
+    <details>
+      <summary>Détails techniques</summary>
+      <pre id="log"></pre>
+      <button class="grey" id="refresh">Actualiser</button>
+      <button class="grey" id="clear">Effacer le journal</button>
+    </details>
+  </div>
+</div>
+<script>
+var N = window.DourgaNative;
+var blocked = [];
+var apps = [];
+
+function say(t){
+  var m = document.getElementById('msg');
+  m.textContent = t;
+  m.style.display = t ? 'block' : 'none';
+}
+function isActive(){
+  try { return N.isShieldActive(); } catch(e) { return false; }
+}
+function showLog(){
+  var t = '';
+  try { t = N.getShieldLog(); } catch(e) { t = '(journal indisponible)'; }
+  document.getElementById('log').textContent = t || '(vide)';
+}
+function render(){
+  var a = isActive();
+  document.getElementById('status').textContent = a
+    ? 'Protection active ✅'
+    : 'Protection désactivée';
+  var t = document.getElementById('toggle');
+  t.textContent = a ? 'Arrêter la protection' : 'Protéger mon forfait';
+  t.className = a ? 'big off' : 'big';
+}
+function save(){
+  N.setBlockedApps(JSON.stringify(blocked));
+  render();
+}
+function drawList(){
+  var q = document.getElementById('search').value.toLowerCase();
+  var list = document.getElementById('list');
+  list.innerHTML = '';
+  apps.forEach(function(app){
+    if (q && app.name.toLowerCase().indexOf(q) < 0) return;
+    var l = document.createElement('label');
+    var c = document.createElement('input');
+    c.type = 'checkbox';
+    c.checked = blocked.indexOf(app.pkg) >= 0;
+    c.onchange = function(){
+      if (c.checked) {
+        if (blocked.indexOf(app.pkg) < 0) blocked.push(app.pkg);
+      } else {
+        blocked = blocked.filter(function(p){ return p !== app.pkg; });
+      }
+      save();
+    };
+    var s = document.createElement('span');
+    s.textContent = app.name;
+    l.appendChild(c);
+    l.appendChild(s);
+    list.appendChild(l);
+  });
+}
+
+if (!N) {
+  say("La protection fonctionne uniquement dans l'application Android Dourga Data.");
+} else {
+  document.getElementById('main').style.display = 'block';
+  apps = JSON.parse(N.getInstalledApps());
+  blocked = JSON.parse(N.getBlockedApps());
+  window.onShieldChanged = function(){ render(); showLog(); };
+  document.getElementById('search').oninput = drawList;
+  document.getElementById('refresh').onclick = function(){ render(); showLog(); };
+  document.getElementById('clear').onclick = function(){ N.clearShieldLog(); showLog(); };
+  document.getElementById('toggle').onclick = function(){
+    if (isActive()) {
+      N.stopShield();
+    } else {
+      say('');
+      N.startShield();
+    }
+  };
+  setInterval(function(){ render(); showLog(); }, 2000);
+  drawList();
+  render();
+  showLog();
+}
+</script>
+</body>
+</html>
