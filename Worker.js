@@ -136,4 +136,28 @@ export default {
     }
 
     html = html.replace(/<base\b[^>]*>/gi, "");
-    html
+    html = html.replace(/[ \t]+\n/g, "\n").replace(/\n{2,}/g, "\n");
+
+    const baseTag = '<base href="' + pageUrl.replace(/"/g, "&quot;") + '">';
+    if (/<head[^>]*>/i.test(html)) {
+      html = html.replace(/<head[^>]*>/i, (tag) => tag + baseTag);
+    } else {
+      html = baseTag + html;
+    }
+
+    const newHtmlGz = await gzipSize(html);
+    const t = m.totals;
+    const origRes = t.img + t.js + t.css;
+    const keptRes = (keepImg ? t.img : 0) + (keepJs ? t.js : 0) + (keepCss ? t.css : 0);
+
+    return new Response(html, {
+      headers: {
+        ...cors,
+        "content-type": "text/html; charset=utf-8",
+        "x-original-bytes": String(Math.round(origHtmlGz + origRes)),
+        "x-delivered-bytes": String(Math.round(newHtmlGz + keptRes)),
+        "x-measure": m.measured + "/" + m.found,
+      },
+    });
+  },
+};
