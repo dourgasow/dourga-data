@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Test sonde</title>
+<style>
+body{margin:0;padding:16px;background:#0b1f2a;color:#e8f1f5;font-family:sans-serif}
+a{color:#4ade80;text-decoration:none}
+button{display:block;width:100%;margin:12px 0;padding:16px;font-size:18px;font-weight:bold;border:0;border-radius:12px;background:#4ade80;color:#0b1f2a}
+button.g{background:#335566;color:#fff}
+pre{background:#12303f;border-radius:10px;padding:10px;font-size:13px;white-space:pre-wrap;word-break:break-word;min-height:60px}
+</style></head><body>
+<a href="./">← Retour</a>
+<h2>🔬 Test de la sonde</h2>
+<p id="s"></p>
+<button id="t"></button>
+<button class="g" id="r">Voir le rapport</button>
+<button class="g" id="p">Partager le rapport</button>
+<pre id="o"></pre>
+<script>
+var N=window.DourgaNative;
+function on(){try{return N.isDnsProbeActive()}catch(e){return false}}
+function draw(){var a=on();document.getElementById('s').textContent=a?'Sonde en marche ✅':'Sonde arrêtée';document.getElementById('t').textContent=a?'Arrêter la sonde':'Démarrer la sonde'}
+if(!N){document.getElementById('s').textContent='Ouvrez cette page dans Dourga Data.'}else{
+window.onProbeChanged=function(){draw()};
+document.getElementById('t').onclick=function(){if(on())N.stopDnsProbe();else N.startDnsProbe()};
+document.getElementById('r').onclick=function(){document.getElementById('o').textContent=N.getDnsProbeReport()||'(vide)'};
+document.getElementById('p').onclick=function(){N.shareDnsProbeReport()};
+setInterval(draw,2000);draw()}
+</script></body></html>
