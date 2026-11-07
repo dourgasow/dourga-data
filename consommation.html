@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ma consommation</title>
+<style>
+body{margin:0;padding:16px;background:#0b1f2a;color:#e8f1f5;font-family:sans-serif}
+a{color:#4ade80;text-decoration:none}
+.box{background:#12303f;border-radius:14px;padding:16px;margin:12px 0}
+.total{font-size:44px;font-weight:bold;color:#4ade80;margin:4px 0 8px}
+.top{display:flex;justify-content:space-between;margin-top:16px;font-size:18px}
+.bar{height:10px;background:#0b1f2a;border-radius:5px;margin-top:6px}
+.fill{height:10px;background:#4ade80;border-radius:5px}
+button{background:#4ade80;border:0;border-radius:10px;padding:14px 18px;font-size:17px;font-weight:bold}
+</style></head><body>
+<a href="./">← Retour</a>
+<h2>📊 Ma consommation</h2>
+<div id="m" class="box">Chargement…</div>
+<button onclick="load()">Actualiser</button>
+<script>
+function fmt(x){return x>=1000?(x/1000).toFixed(2)+' Go':Math.round(x)+' Mo'}
+function add(p,t,s,c){var e=document.createElement(t);e.textContent=s;if(c)e.className=c;p.appendChild(e);return e}
+function row(m,n,mb,max){var t=add(m,'div','','top');add(t,'span',n);add(t,'span',fmt(mb));var b=add(m,'div','','bar');add(b,'div','','fill').style.width=Math.min(100,Math.max(3,Math.round(mb/max*100)))+'%'}
+function load(){
+var m=document.getElementById('m');m.textContent='';
+if(!window.DourgaUsage){add(m,'div','Ouvrez cette page dans Dourga Data.');return}
+var d;try{d=JSON.parse(DourgaUsage.today())}catch(e){add(m,'div','Lecture impossible.');return}
+if(!d.access){
+add(m,'div','Autorisez Dourga Data une seule fois : choisissez Dourga Data puis activez l’accès.');
+add(m,'button','Autoriser').onclick=function(){DourgaUsage.openAccessSettings()};return}
+if(d.error){add(m,'div','Erreur : '+d.error);return}
+add(m,'div','Aujourd’hui');
+add(m,'div',fmt(d.totalMb),'total');
+var max=d.apps.length?d.apps[0].mb:1,rest=0;
+d.apps.forEach(function(a,i){if(i<3)row(m,a.name,a.mb,max);else rest+=a.mb});
+if(rest>0.05)row(m,'Autres',rest,max)}
+document.addEventListener('visibilitychange',function(){if(!document.hidden)load()});
+load();
+</script></body></html>
