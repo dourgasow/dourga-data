@@ -1,0 +1,41 @@
+<!DOCTYPE html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Dourga Data</title><style>
+body{margin:0;padding:16px;background:#0b1f2a;color:#e8f1f5;font-family:sans-serif;text-align:center}
+h1{color:#4ade80;font-size:24px;margin:8px 0}
+.big{width:200px;height:200px;border-radius:50%;border:0;font-size:22px;font-weight:bold;background:#4ade80;color:#0b1f2a;margin:16px 0}
+.big.off{background:#f87171}
+.box{background:#12303f;border-radius:14px;padding:16px;margin:12px 0;text-align:left}
+.total{font-size:40px;font-weight:bold;color:#4ade80;text-align:center}
+.top{display:flex;justify-content:space-between;margin-top:14px;font-size:17px}
+.bar{height:10px;background:#0b1f2a;border-radius:5px;margin-top:6px}
+.fill{height:10px;background:#4ade80;border-radius:5px}
+a{color:#4ade80}
+#dourga-shield-btn{display:none!important}
+</style></head><body>
+<h1 id="t">DOURGA DATA</h1>
+<p id="s"></p>
+<button id="b" class="big"></button>
+<div id="m" class="box"></div>
+<p><a href="economie.html/economie.html">Conseils pour économiser Facebook</a></p>
+<script>
+var N=window.DourgaNative,U=window.DourgaUsage,k=0;
+document.getElementById('t').onclick=function(){k++;setTimeout(function(){k=0},3000);if(k>=5)location.href='bouclier.html'};
+function fmt(x){return x>=1000?(x/1000).toFixed(2)+' Go':Math.round(x)+' Mo'}
+function add(p,t,s,c){var e=document.createElement(t);e.textContent=s;if(c)e.className=c;p.appendChild(e);return e}
+function row(m,n,mb,max){var t=add(m,'div','','top');add(t,'span',n);add(t,'span',fmt(mb));var b=add(m,'div','','bar');add(b,'div','','fill').style.width=Math.min(100,Math.max(3,Math.round(mb/max*100)))+'%'}
+function act(){try{return N.isShieldActive()}catch(e){return false}}
+function draw(){var a=act(),b=document.getElementById('b');document.getElementById('s').textContent=a?'Protection activée ✅ Touchez pour arrêter':'Protection désactivée. Touchez pour activer';b.textContent=a?'Protection active':'Protéger mon forfait';b.className=a?'big':'big off'}
+document.getElementById('b').onclick=function(){if(!N)return;if(act())N.stopShield();else N.startShield();setTimeout(draw,800)};
+function load(){
+var m=document.getElementById('m');m.textContent='';
+if(!U){add(m,'div','Ouvrez cette page dans Dourga Data.');return}
+var d;try{d=JSON.parse(U.today())}catch(e){add(m,'div','Lecture impossible.');return}
+if(!d.access){add(m,'div','Autorisez Dourga Data une seule fois.');add(m,'button','Autoriser').onclick=function(){U.openAccessSettings()};return}
+if(d.error){add(m,'div','Erreur : '+d.error);return}
+add(m,'div','Aujourd’hui');
+add(m,'div',fmt(d.totalMb),'total');
+var max=d.apps.length?d.apps[0].mb:1,rest=0;
+d.apps.forEach(function(a,i){if(i<3)row(m,a.name,a.mb,max);else rest+=a.mb});
+if(rest>0.05)row(m,'Autres',rest,max)}
+draw();load();setInterval(draw,2000);
+document.addEventListener('visibilitychange',function(){if(!document.hidden){draw();load()}});
+</script></body></html>
